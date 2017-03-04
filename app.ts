@@ -3,6 +3,10 @@ require('dotenv').config();
 import * as restify from 'restify';
 import * as builder from 'botbuilder';
 import addCharacterCreationDialog from './dialog/characterCreation';
+import addBattleStateDiaolg from './dialog/battleDialog'
+import Character  from "./components/character";
+import Enemy  from "./components/enemy";
+import BattleState from "./components/battleState"
 import Bot from './bot';
 
 class App {
@@ -11,7 +15,7 @@ class App {
 
         const server = restify.createServer();
         server.post('/api/messages', (bot.connector('*') as builder.ChatConnector).listen());
-        server.listen(process.env.PORT, () => console.log(`${server.name} listening to ${server.url}`));
+        server.listen(3000, () => console.log(`${server.name} listening to ${server.url}`));
         addCharacterCreationDialog(bot);
         bot.dialog('/', [
             (session, args, next) => {
@@ -35,13 +39,24 @@ class App {
             	else {
             		session.beginDialog('/createcharacter');
             	}
+                
+                if(session.userData.character){
+                    game(session);
+
+                }
             },
         ]);
         bot.on('deleteUserData', function (session) {
         	session.userData = null;
 		});
+        
+        function game(session) {
+           let battleState = new BattleState([session.userData.character],[new Enemy("Goblin1"), new Enemy("Goblin2")] )
+
+        }
 
     }
+    
 }
 
 const app = new App();

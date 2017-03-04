@@ -8,6 +8,7 @@
     "files": [
         "bot.ts",
         "app.ts",
-        "./dialog/characterCreation.ts"
+        "./dialog/characterCreation.ts",
+        "./components/character.ts"
     ]
 }

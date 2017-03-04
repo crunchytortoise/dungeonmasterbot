@@ -3,6 +3,7 @@ require('dotenv').config();
 import * as restify from 'restify';
 import * as builder from 'botbuilder';
 import Bot from '../bot';
+import Character from '../components/character'
 
 
 //TODO: replace character data with character class
@@ -31,6 +32,7 @@ export default function addCharacterCreationDialog(bot: Bot){
         	builder.Prompts.choice(session, "What class?", ['mage', 'warrior', 'rogue'])
         },
         (session, results) => {
+            session.userData.character = new Character(session.userData.characterName, results.response.entity)
             session.endConversation(`Welcome, ${session.userData.characterName} the ${results.response.entity}`);
         },
     ]);
